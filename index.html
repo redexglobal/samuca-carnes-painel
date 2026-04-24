@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Samuca Carnes — Painel de Ofertas</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap');
+  :root {
+    --verm:    #C41E3A;
+    --verm-esc:#5C0A14;
+    --dourado: #FFD700;
+    --b40:     rgba(255,255,255,0.4);
+    --b15:     rgba(255,255,255,0.15);
+    --b08:     rgba(255,255,255,0.08);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:100%;height:100%;overflow:hidden;
+    background:linear-gradient(135deg,#3D0008 0%,#C41E3A 100%);
+    font-family:'Montserrat',sans-serif;color:#fff;}
+
+  .painel{display:grid;grid-template-columns:50% 50%;height:100vh;width:100vw;}
+
+  /* COLUNA ESQUERDA */
+  .col-esq{display:grid;grid-template-rows:58% 42%;height:100vh;
+    border-right:2px solid rgba(255,215,0,0.5);}
+
+  .bloco-prod{position:relative;overflow:hidden;
+    border-bottom:2px solid rgba(255,215,0,0.5);background:#3D0008;}
+  .prod-img{position:absolute;inset:0;width:100%;height:100%;
+    object-fit:cover;transition:opacity 0.8s ease;transform-origin:center center;}
+  .prod-img.saindo{opacity:0;}
+
+  @keyframes kb1{from{transform:scale(1)   translate(0%,0%);}  to{transform:scale(1.13) translate(-2%,-2%);}}
+  @keyframes kb2{from{transform:scale(1.08) translate(-2%,0%);} to{transform:scale(1)    translate(2%,-1%);}}
+  @keyframes kb3{from{transform:scale(1)   translate(2%,1%);}  to{transform:scale(1.11) translate(-1%,-2%);}}
+  @keyframes kb4{from{transform:scale(1.07) translate(0%,-2%);}to{transform:scale(1)    translate(0%,2%);}}
+  .prod-img.kb1{animation:kb1 9.5s ease-in-out forwards;}
+  .prod-img.kb2{animation:kb2 9.5s ease-in-out forwards;}
+  .prod-img.kb3{animation:kb3 9.5s ease-in-out forwards;}
+  .prod-img.kb4{animation:kb4 9.5s ease-in-out forwards;}
+
+  .prod-glow{position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:radial-gradient(ellipse at 62% 38%,rgba(255,80,40,0.18) 0%,transparent 65%);
+    animation:glow-pulse 3.8s ease-in-out infinite;}
+  @keyframes glow-pulse{0%,100%{opacity:0.55;}50%{opacity:1;}}
+  .prod-overlay{position:absolute;bottom:0;left:0;right:0;height:38%;
+    background:linear-gradient(to top,rgba(61,0,8,0.92) 0%,transparent 100%);z-index:2;}
+  .prod-badge{position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);
+    background:var(--dourado);color:#000;font-size:1rem;font-weight:900;
+    padding:0.5rem 2.2rem;border-radius:50px;letter-spacing:3px;text-transform:uppercase;
+    white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,0.5);z-index:3;}
+
+  .bloco-marca{position:relative;overflow:hidden;display:flex;flex-direction:column;
+    align-items:center;justify-content:flex-end;padding:0.9rem 1rem;gap:0.3rem;
+    background:#3D0008;}
+  .bloco-marca::after{content:'';position:absolute;inset:0;
+    background:linear-gradient(to top,rgba(61,0,8,0.65) 0%,rgba(61,0,8,0.15) 50%,transparent 100%);
+    z-index:2;}
+  .logo-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:1;background:#3D0008;}
+  .marca-linha{position:absolute;top:0;left:10%;right:10%;height:1px;
+    background:linear-gradient(90deg,transparent,var(--dourado),transparent);z-index:3;}
+  .bloco-marca .slogan,.bloco-marca .loc,.bloco-marca .relogio,.bloco-marca .datatxt
+    {position:relative;z-index:3;}
+  .slogan{font-size:0.65rem;color:var(--dourado);font-weight:800;letter-spacing:2px;
+    text-transform:uppercase;text-align:center;
+    text-shadow:0 1px 6px rgba(0,0,0,0.9),0 0 12px rgba(0,0,0,0.7);}
+  .loc{font-size:0.68rem;color:#fff;text-align:center;font-weight:700;
+    text-shadow:0 1px 6px rgba(0,0,0,0.9),0 0 10px rgba(0,0,0,0.8);}
+  .relogio{font-size:2.4rem;font-weight:900;color:var(--dourado);letter-spacing:5px;
+    text-shadow:0 0 24px rgba(255,215,0,0.6),0 2px 8px rgba(0,0,0,0.9);line-height:1;}
+  .datatxt{font-size:0.72rem;color:#fff;font-weight:700;text-align:center;text-transform:capitalize;
+    text-shadow:0 1px 6px rgba(0,0,0,0.9);}
+
+  /* COLUNA DIREITA */
+  .col-dir{display:flex;flex-direction:column;height:100vh;overflow:hidden;
+    padding:1.3rem 1.5rem;
+    background:linear-gradient(160deg,#D42040 0%,#9A1028 45%,#3D0008 100%);
+    position:relative;}
+  .col-dir::before{content:'';position:absolute;top:-100px;right:-100px;
+    width:340px;height:340px;border-radius:50%;
+    border:50px solid rgba(255,255,255,0.04);pointer-events:none;z-index:0;}
+  .col-dir::after{content:'';position:absolute;bottom:-80px;left:-80px;
+    width:260px;height:260px;border-radius:50%;
+    border:40px solid rgba(255,255,255,0.04);pointer-events:none;z-index:0;}
+  .col-dir>*{position:relative;z-index:1;}
+
+  .col-titulo{text-align:center;margin-bottom:0.8rem;flex-shrink:0;
+    padding-bottom:0.7rem;border-bottom:2px solid var(--dourado);display:flex;align-items:center;justify-content:center;}
+  .col-titulo span{font-size:clamp(1.6rem,3.2vw,3rem);font-weight:900;letter-spacing:4px;
+    text-transform:uppercase;color:var(--dourado);
+    text-shadow:0 0 28px rgba(255,215,0,0.7),0 2px 6px rgba(0,0,0,0.4);
+    width:100%;display:block;text-align:center;line-height:1.1;}
+
+  .dest-hdr{display:flex;align-items:center;gap:1rem;
+    background:rgba(255,255,255,0.13);border:2px solid #fff;border-radius:14px;
+    padding:0.9rem 1.3rem;margin-bottom:0.7rem;flex-shrink:0;
+    box-shadow:0 4px 24px rgba(0,0,0,0.2),inset 0 1px 0 rgba(255,255,255,0.2);}
+  .dest-titulo{font-size:1.55rem;font-weight:900;color:#fff;letter-spacing:2px;
+    line-height:1;text-transform:uppercase;text-shadow:0 2px 10px rgba(0,0,0,0.3);}
+  .dest-sub{font-size:0.63rem;color:var(--dourado);font-weight:700;
+    letter-spacing:1px;text-transform:uppercase;margin-top:0.15rem;}
+  .dest-badge{background:var(--dourado);color:#000;font-size:0.6rem;font-weight:900;
+    padding:0.3rem 0.8rem;border-radius:50px;letter-spacing:1.5px;text-transform:uppercase;
+    animation:piscar 2s ease-in-out infinite;white-space:nowrap;}
+
+  .dest-cortes{display:flex;flex-direction:column;gap:0.38rem;
+    margin-bottom:0.6rem;flex-shrink:0;}
+  .corte{display:flex;align-items:center;justify-content:space-between;
+    background:var(--b08);border:1px solid var(--b40);border-left:4px solid #fff;
+    border-radius:0 10px 10px 0;padding:0.55rem 1rem;}
+  .corte-n{font-size:0.86rem;font-weight:700;color:#fff;}
+  .corte-p{font-size:1.1rem;font-weight:900;color:var(--dourado);
+    text-shadow:0 0 12px rgba(255,215,0,0.4);}
+
+  .divisor{display:flex;align-items:center;gap:0.7rem;margin:0.35rem 0;flex-shrink:0;}
+  .div-l{flex:1;height:1px;background:var(--b40);}
+  .div-t{font-size:0.58rem;font-weight:800;color:rgba(255,255,255,0.7);
+    letter-spacing:2px;text-transform:uppercase;white-space:nowrap;}
+
+  .outros-wrap{flex:1;overflow:hidden;position:relative;
+    mask-image:linear-gradient(to bottom,transparent 0%,black 8%,black 92%,transparent 100%);
+    -webkit-mask-image:linear-gradient(to bottom,transparent 0%,black 8%,black 92%,transparent 100%);}
+  .outros-track{display:flex;flex-direction:column;gap:0.28rem;
+    animation:scroll-up 30s linear infinite;}
+  .outros-track:hover{animation-play-state:paused;}
+  @keyframes scroll-up{0%{transform:translateY(0);}100%{transform:translateY(-50%);}}
+
+  .outro{display:flex;align-items:center;justify-content:space-between;
+    padding:0.42rem 0.85rem;border-radius:10px;
+    border:1px solid var(--b40);background:var(--b08);gap:0.5rem;flex-shrink:0;}
+  .outro-info{flex:1;min-width:0;}
+  .outro-cat{font-size:0.6rem;font-weight:800;color:var(--dourado);
+    text-transform:uppercase;letter-spacing:1px;display:block;}
+  .outro-n{font-size:0.82rem;font-weight:700;color:#fff;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;}
+  .outro-p{font-size:0.95rem;font-weight:900;color:#fff;flex-shrink:0;
+    background:var(--b15);padding:0.22rem 0.65rem;border-radius:6px;
+    border:1px solid var(--b40);}
+
+  .marca-criador{position:fixed;bottom:0.7rem;right:0.8rem;z-index:999;
+    opacity:0.55;transition:opacity 0.2s;}
+  .marca-criador:hover{opacity:0.9;}
+  .marca-criador img{width:42px;height:42px;object-fit:contain;border-radius:8px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.4);display:block;}
+
+  @keyframes piscar{0%,100%{opacity:1;}50%{opacity:0.55;}}
+  @keyframes fi{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+  .fi{animation:fi 0.4s ease forwards;}
+</style>
+</head>
+<body>
+
+<div class="painel">
+  <div class="col-esq">
+    <div class="bloco-prod">
+      <img id="prod-img" class="prod-img kb1" src="images/picanha.jpeg" alt="Produto"/>
+      <div class="prod-glow"></div>
+      <div class="prod-overlay"></div>
+      <div id="prod-badge" class="prod-badge">PICANHA</div>
+    </div>
+    <div class="bloco-marca">
+      <div class="marca-linha"></div>
+      <img src="logo.jpeg" class="logo-bg" alt="Samuca Carnes"/>
+      <div class="slogan">A Melhor Carne da Região</div>
+      <div class="loc">Samuca Carnes · Qualidade Garantida</div>
+      <div class="relogio" id="relogio">00:00:00</div>
+      <div class="datatxt" id="datatxt">--</div>
+    </div>
+  </div>
+
+  <div class="col-dir">
+    <div class="col-titulo"><span>Ofertas do Dia — Samuca Carnes</span></div>
+    <div class="dest-hdr">
+      <div>
+        <div class="dest-titulo" id="dest-titulo">PICANHA</div>
+        <div class="dest-sub">Cortes frescos do dia</div>
+      </div>
+      <div class="dest-badge">DESTAQUE</div>
+    </div>
+    <div class="dest-cortes" id="dest-cortes"></div>
+    <div class="divisor">
+      <div class="div-l"></div>
+      <div class="div-t">Outros cortes disponíveis</div>
+      <div class="div-l"></div>
+    </div>
+    <div class="outros-wrap">
+      <div class="outros-track" id="outros-track"></div>
+    </div>
+  </div>
+</div>
+
+<div class="marca-criador">
+  <img src="logo.jpeg" alt="Samuca Carnes" onerror="this.style.display='none'"/>
+</div>
+
+<script>
+var P=[
+  {
+    nome:"Picanha & Especiais", img:"images/picanha.jpeg",
+    c:[
+      {n:"Picanha Bovina",           p:"Consulte"},
+      {n:"Costa Gaúcha",             p:"Consulte"},
+      {n:"Bisteca Paulista",         p:"Consulte"},
+      {n:"Rabada",                   p:"Consulte"}
+    ]
+  },
+  {
+    nome:"Frango", img:"images/frango-resfriado.jpeg",
+    c:[
+      {n:"Frango Resfriado Inteiro", p:"Consulte"},
+      {n:"Coxa e Sobrecoxa",         p:"Consulte"},
+      {n:"Asa de Frango",            p:"Consulte"}
+    ]
+  },
+  {
+    nome:"Carnes de Primeira", img:"images/file-mignon.jpeg",
+    c:[
+      {n:"Filé Mignon",              p:"Consulte"},
+      {n:"Alcatra",                  p:"Consulte"},
+      {n:"Patinho",                  p:"Consulte"},
+      {n:"Capa do Contrafilé",       p:"Consulte"},
+      {n:"Peixinho Bovino",          p:"Consulte"},
+      {n:"Lombão Bovino",            p:"Consulte"}
+    ]
+  },
+  {
+    nome:"Carnes de Segunda", img:"images/coxao-mole.jpeg",
+    c:[
+      {n:"Coxão Mole",               p:"Consulte"},
+      {n:"Coxão Duro",               p:"Consulte"},
+      {n:"Acém Bovino",              p:"Consulte"},
+      {n:"Músculo",                  p:"Consulte"},
+      {n:"Paleta Bovina",            p:"Consulte"},
+      {n:"Peito Bovino",             p:"Consulte"}
+    ]
+  },
+  {
+    nome:"Costela & Churrasco", img:"images/costela-p.a.jpeg",
+    c:[
+      {n:"Costela P.A.",             p:"Consulte"},
+      {n:"Costela Ripa",             p:"Consulte"},
+      {n:"Fraldinha",                p:"Consulte"},
+      {n:"Chambari",                 p:"Consulte"}
+    ]
+  },
+  {
+    nome:"Carnes Suínas", img:"images/lombo-suino.jpeg",
+    c:[
+      {n:"Lombo Suíno",              p:"Consulte"},
+      {n:"Costelinha Suína",         p:"Consulte"},
+      {n:"Pernil com Osso",          p:"Consulte"},
+      {n:"Pernil Suíno Sem Osso",    p:"Consulte"},
+      {n:"Panceta Suína",            p:"Consulte"},
+      {n:"Barriga Suína",            p:"Consulte"},
+      {n:"Toucinho Suíno",           p:"Consulte"}
+    ]
+  }
+];
+
+var idx=0;
+
+function buildOutros(i){
+  var track=document.getElementById("outros-track");
+  track.innerHTML="";
+  var items=[];
+  P.forEach(function(op,j){
+    if(j===i)return;
+    op.c.forEach(function(c){
+      items.push({cat:op.nome,n:c.n,p:c.p});
+    });
+  });
+  items.concat(items).forEach(function(item){
+    var el=document.createElement("div");
+    el.className="outro";
+    el.innerHTML='<div class="outro-info"><span class="outro-cat">'+item.cat+'</span><span class="outro-n">'+item.n+'</span></div><span class="outro-p">'+item.p+'</span>';
+    track.appendChild(el);
+  });
+  var dur=Math.max(20,items.length*2.2);
+  track.style.animationDuration=dur+"s";
+}
+
+function render(i){
+  var p=P[i];
+  var img=document.getElementById("prod-img");
+  var badge=document.getElementById("prod-badge");
+  img.classList.remove("kb1","kb2","kb3","kb4");
+  img.classList.add("saindo");
+  setTimeout(function(){
+    img.src=p.img;
+    void img.offsetWidth;
+    img.classList.remove("saindo");
+    img.classList.add(["kb1","kb2","kb3","kb4"][i%4]);
+    badge.textContent=p.nome.toUpperCase();
+  },750);
+  document.getElementById("dest-titulo").textContent=p.nome.toUpperCase();
+  var dc=document.getElementById("dest-cortes");
+  dc.innerHTML="";
+  p.c.forEach(function(c){
+    var el=document.createElement("div");el.className="corte fi";
+    el.innerHTML='<span class="corte-n">'+c.n+'</span><span class="corte-p">'+c.p+'</span>';
+    dc.appendChild(el);
+  });
+  buildOutros(i);
+}
+
+function tick(){
+  var a=new Date();
+  document.getElementById("relogio").textContent=
+    String(a.getHours()).padStart(2,"0")+":"+String(a.getMinutes()).padStart(2,"0")+":"+String(a.getSeconds()).padStart(2,"0");
+  var dias=["domingo","segunda-feira","terça-feira","quarta-feira","quinta-feira","sexta-feira","sábado"];
+  var meses=["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
+  document.getElementById("datatxt").textContent=
+    dias[a.getDay()]+", "+String(a.getDate()).padStart(2,"0")+" de "+meses[a.getMonth()]+". de "+a.getFullYear();
+}
+
+render(0);tick();
+setInterval(tick,1000);
+setInterval(function(){idx=(idx+1)%P.length;render(idx);},9000);
+</script>
+</body>
+</html>
