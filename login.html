@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Samuca Carnes — Acesso</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{
+    width:100%;height:100%;overflow:hidden;
+    background:linear-gradient(135deg,#3D0008 0%,#C41E3A 100%);
+    font-family:'Montserrat',sans-serif;color:#fff;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .card{
+    width:100%;max-width:400px;
+    background:rgba(255,255,255,0.07);
+    border:1px solid rgba(255,215,0,0.35);
+    border-radius:20px;padding:2.4rem 2rem;
+    box-shadow:0 8px 48px rgba(0,0,0,0.55);
+    backdrop-filter:blur(12px);
+  }
+  .logo-wrap{text-align:center;margin-bottom:1.6rem;}
+  .logo-wrap img{width:90px;height:90px;object-fit:contain;border-radius:12px;
+    box-shadow:0 4px 20px rgba(0,0,0,0.5);}
+  .titulo{font-size:1.5rem;font-weight:900;color:#FFD700;letter-spacing:3px;
+    text-transform:uppercase;text-align:center;margin-bottom:0.25rem;
+    text-shadow:0 0 20px rgba(255,215,0,0.5);}
+  .subtitulo{font-size:0.65rem;color:rgba(255,255,255,0.6);font-weight:700;
+    letter-spacing:2px;text-transform:uppercase;text-align:center;margin-bottom:2rem;}
+  .separador{height:1px;background:linear-gradient(90deg,transparent,rgba(255,215,0,0.5),transparent);
+    margin-bottom:1.8rem;}
+  .campo{margin-bottom:1.1rem;}
+  .campo label{display:block;font-size:0.62rem;font-weight:800;color:#FFD700;
+    letter-spacing:2px;text-transform:uppercase;margin-bottom:0.45rem;}
+  .campo input{
+    width:100%;padding:0.75rem 1rem;
+    background:rgba(255,255,255,0.1);
+    border:1px solid rgba(255,255,255,0.25);border-radius:10px;
+    color:#fff;font-family:'Montserrat',sans-serif;font-size:0.95rem;font-weight:600;
+    outline:none;transition:border-color 0.2s,box-shadow 0.2s;
+  }
+  .campo input:focus{border-color:#FFD700;box-shadow:0 0 0 3px rgba(255,215,0,0.15);}
+  .campo input::placeholder{color:rgba(255,255,255,0.35);}
+  .btn{
+    width:100%;margin-top:0.5rem;padding:0.85rem;
+    background:#FFD700;color:#000;
+    font-family:'Montserrat',sans-serif;font-size:0.95rem;font-weight:900;
+    letter-spacing:2px;text-transform:uppercase;
+    border:none;border-radius:10px;cursor:pointer;
+    box-shadow:0 4px 20px rgba(255,215,0,0.35);
+    transition:transform 0.15s,box-shadow 0.15s;
+  }
+  .btn:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(255,215,0,0.5);}
+  .btn:active{transform:translateY(0);}
+  .erro{
+    font-size:0.72rem;font-weight:700;color:#FF6B6B;
+    text-align:center;margin-top:0.9rem;letter-spacing:1px;
+    display:none;animation:shake 0.35s ease;
+  }
+  .erro.visivel{display:block;}
+  @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+  .rodape{font-size:0.6rem;color:rgba(255,255,255,0.3);text-align:center;
+    margin-top:1.8rem;letter-spacing:1px;}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo-wrap">
+    <img src="logo.jpeg" alt="Samuca Carnes" onerror="this.style.display='none'"/>
+  </div>
+  <div class="titulo">Samuca Carnes</div>
+  <div class="subtitulo">Painel Administrativo</div>
+  <div class="separador"></div>
+  <form id="form-login" onsubmit="entrar(event)">
+    <div class="campo">
+      <label>Usuário</label>
+      <input type="text" id="usuario" placeholder="Digite seu usuário" autocomplete="username"/>
+    </div>
+    <div class="campo">
+      <label>Senha</label>
+      <input type="password" id="senha" placeholder="Digite sua senha" autocomplete="current-password"/>
+    </div>
+    <button type="submit" class="btn">Entrar no Painel</button>
+    <div class="erro" id="erro-msg">Usuário ou senha incorretos</div>
+  </form>
+  <div class="rodape">Acesso restrito · Samuca Carnes</div>
+</div>
+
+<script>
+// Credenciais — altere aqui se necessário
+var USUARIOS = [
+  {user: "samuca",  senha: "carnes2024"},
+  {user: "admin",   senha: "samuca27"}
+];
+
+if(sessionStorage.getItem("samuca_auth") === "ok"){
+  window.location.replace("index.html");
+}
+
+function entrar(e){
+  e.preventDefault();
+  var u = document.getElementById("usuario").value.trim().toLowerCase();
+  var s = document.getElementById("senha").value;
+  var erro = document.getElementById("erro-msg");
+
+  var ok = USUARIOS.some(function(c){ return c.user === u && c.senha === s; });
+  if(ok){
+    sessionStorage.setItem("samuca_auth","ok");
+    window.location.replace("index.html");
+  } else {
+    erro.classList.remove("visivel");
+    void erro.offsetWidth;
+    erro.classList.add("visivel");
+    document.getElementById("senha").value = "";
+    document.getElementById("senha").focus();
+  }
+}
+</script>
+</body>
+</html>
