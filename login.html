@@ -95,28 +95,7 @@ var USUARIOS = [
   {user: "admin",   senha: "samuca27"}
 ];
 
-if(sessionStorage.getItem("samuca_auth") === "ok"){
-  window.location.replace("index.html");
-}
-
-function entrar(e){
-  e.preventDefault();
-  var u = document.getElementById("usuario").value.trim().toLowerCase();
-  var s = document.getElementById("senha").value;
-  var erro = document.getElementById("erro-msg");
-
-  var ok = USUARIOS.some(function(c){ return c.user === u && c.senha === s; });
-  if(ok){
-    sessionStorage.setItem("samuca_auth","ok");
-    window.location.replace("index.html");
-  } else {
-    erro.classList.remove("visivel");
-    void erro.offsetWidth;
-    erro.classList.add("visivel");
-    document.getElementById("senha").value = "";
-    document.getElementById("senha").focus();
-  }
-}
+window.location.replace("index.html");
 </script>
 </body>
 </html>
